@@ -1,0 +1,15 @@
+{{- if .Values.ingress.enabled }}
+  {{- range .Values.ingress.hosts }}
+  http{{ if $.Values.ingress.tls }}s{{ end }}://{{ .host }}{{ index .paths 0 | .path }}
+  {{- end }}
+  {{- else if not (empty .Values.service.externalIPs) }}
+  {{- range .Values.service.externalIPs }}
+  http://{{ . }}:{{ $.Values.service.port }}
+  {{- end }}
+  {{- else if not (empty .Values.service.loadBalancerIP) }}
+  http://{{ .Values.service.loadBalancerIP }}:{{ .Values.service.port }}
+  {{- else if eq .Values.service.type "LoadBalancer" }}
+  http://<EXTERNAL-IP>:{{ .Values.service.port }}
+  {{- else }}
+  http://<CLUSTER-IP>:{{ .Values.service.port }}
+  {{- end }}

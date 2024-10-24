@@ -1,0 +1,37 @@
+replicaCount: 1
+
+image:
+  repository: ghcr.io/horizon-school-of-digital-technologies/library
+  pullPolicy: IfNotPresent
+  tag: "20241018-012704"
+
+service:
+  type: ClusterIP
+  port: 50051
+  metricsport: 2112
+
+ingress:
+  enabled: false
+  className: "nginx"
+  #  annotations:
+  #    cert-manager.io/cluster-issuer: letsencrypt-prod
+  hosts:
+  - host: library.horizon-workspaces.com
+    paths:
+    - path: /
+      pathType: ImplementationSpecific
+#  tls:
+#   - hosts:
+#     - library.horizon-workspaces.com
+#     secretName: library.horizon-workspaces.com-tls
+
+resources:
+  limits:
+    cpu: 50m
+    memory: 128Mi
+  requests:
+    cpu: 50m
+    memory: 128Mi
+
+autoscaling:
+  enabled: false
